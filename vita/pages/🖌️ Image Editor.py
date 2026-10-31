@@ -1,6 +1,7 @@
 import os
 
 import streamlit as st
+from modules.image_ops import invert_image, png_bytes, remove_background
 from modules.utils import add_bg_from_local, local_css, set_page_config
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 from PIL.ImageFilter import (
@@ -14,7 +15,6 @@ from PIL.ImageFilter import (
     SMOOTH,
     SMOOTH_MORE,
 )
-from removebg import RemoveBg
 
 
 def main():
@@ -48,7 +48,7 @@ def main():
     if image is None:
         return
 
-    img = Image.open(image)
+    img = ImageOps.exif_transpose(Image.open(image))
     edited_img = img
 
     with st.sidebar:
@@ -56,7 +56,7 @@ def main():
         center_col.header("Settings")
 
         sharp_value = st.slider("Sharpness", 0.0, 2.0, 1.0)
-        color_value = st.slider("Color")
+        color_value = st.slider("Color", 0.0, 2.0, 1.0)
         brightness_value = st.slider("Brightness", 0.0, 5.0, 1.0)
         contrast_value = st.slider("Contrast", 0.0, 2.0, 1.0)
         rotate_value = st.slider(
@@ -65,21 +65,15 @@ def main():
             360,
         )
         resize_value = st.slider(
-            "Resize (px)",
-            50,
-            500,
+            "Width (px)",
+            1,
+            max(500, img.width),
+            img.width,
         )
         flip_image_value = st.sidebar.selectbox(
             "Flip Image",
             options=("Original", "Top->Bottom", "Left->Right", "Both"),
         )
-
-        if not color_value:
-            color_value = 1
-        if not brightness_value:
-            brightness_value = 1
-        if not contrast_value:
-            contrast_value = 1
 
         if img is not None:
             sharp = ImageEnhance.Sharpness(edited_img)
@@ -94,9 +88,12 @@ def main():
             contrast = ImageEnhance.Contrast(edited_img)
             edited_img = contrast.enhance(contrast_value)
 
-            edited_img = edited_img.rotate(rotate_value)
+            edited_img = edited_img.rotate(rotate_value, expand=True)
 
-            edited_img = edited_img.resize((resize_value, resize_value))
+            height = max(
+                1, round(edited_img.height * resize_value / edited_img.width)
+            )
+            edited_img = edited_img.resize((resize_value, height))
 
             if flip_image_value == "Top->Bottom":
                 edited_img = edited_img.transpose(Image.FLIP_TOP_BOTTOM)
@@ -122,7 +119,7 @@ def main():
             if st.sidebar.checkbox("Grayscale"):
                 edited_img = ImageOps.grayscale(edited_img)
             if st.sidebar.checkbox("Invert colors"):
-                edited_img = ImageOps.invert(edited_img)
+                edited_img = invert_image(edited_img)
             if st.sidebar.checkbox("Smooth"):
                 edited_img = edited_img.filter(SMOOTH)
             if st.sidebar.checkbox("Smooth more"):
@@ -145,12 +142,9 @@ def main():
 
             st.sidebar.header("Background")
             if st.sidebar.checkbox("Remove background"):
-                rmbg = RemoveBg(st.secrets["removebg_api_key"], "error.log")
-                edited_img.save("input.jpg")
-                rmbg.remove_background_from_img_file(
-                    img_file_path="input.jpg",
+                edited_img = remove_background(
+                    edited_img, st.secrets["removebg_api_key"]
                 )
-                edited_img = Image.open("input.jpg_no_bg.png")
     if img is not None:
         col1, col2 = st.columns(2, gap="large")
         col1.subheader("Before")
@@ -162,6 +156,12 @@ def main():
         col2.image(
             edited_img,
             width=450,
+        )
+        st.download_button(
+            "Download edited image",
+            png_bytes(edited_img),
+            file_name="edited-image.png",
+            mime="image/png",
         )
 
 
