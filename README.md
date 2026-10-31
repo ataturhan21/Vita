@@ -4,12 +4,12 @@ A Streamlit collection of small image, video, text, and download utilities.
 
 ## Included tools
 
-| Tool | Current implementation |
-| --- | --- |
-| Image editor | Color and sharpness adjustments, rotation, resizing, flips, filters, and optional remove.bg integration |
-| Video editor | Upload a video, adjust playback speed, preview the processed MP4, and download it |
-| Spelling correction | TextBlob-based text correction |
-| YouTube downloader | Download a supported YouTube watch or shorts URL to the machine running the app |
+| Tool                | Current implementation                                                                                  |
+| ------------------- | ------------------------------------------------------------------------------------------------------- |
+| Image editor        | Color and sharpness adjustments, rotation, resizing, flips, filters, and optional remove.bg integration |
+| Video editor        | Upload a video, adjust playback speed, preview the processed MP4, and download it                       |
+| Spelling correction | TextBlob-based text correction                                                                          |
+| YouTube downloader  | Download a supported YouTube watch or shorts URL to the machine running the app                         |
 
 The current repository contains these 4 pages. It does not include a PDF conversion page or a voice-cloning implementation.
 
@@ -46,3 +46,13 @@ The YouTube integration depends on the external site's behavior and the original
 ## License
 
 [GNU General Public License v3.0](LICENSE).
+
+## Image handling and offline checks
+
+The image editor preserves aspect ratio when resizing, accepts 0-valued
+adjustments, supports alpha-preserving inversion, and exports the edited PNG.
+Background removal uses a separate temporary PNG workspace for each call and
+cleans it on success or failure.
+
+Run `poetry run python -m unittest discover -s tests -v` for image regressions.
+The background-removal tests use a fake client and do not contact the service.
