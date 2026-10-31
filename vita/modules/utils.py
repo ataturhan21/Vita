@@ -51,8 +51,8 @@ def set_page_config() -> None:
         layout="wide",
         initial_sidebar_state="expanded",
         menu_items={
-            "Get Help": "https://github.com/invictus-21/Vita/blob/main/README.md",
-            "Report a bug": "https://github.com/invictus-21/Vita/issues",
+            "Get Help": "https://github.com/ataturhan21/Vita/blob/main/README.md",
+            "Report a bug": "https://github.com/ataturhan21/Vita/issues",
             "About": """Welcome to the Vita (β) Toolbox! This repository serves as a collection of various
              mini tools designed to simplify and enhance different tasks and processes. Whether you're a developer,
               data scientist, or just someone looking to streamline everyday tasks, you'll find something useful here.""",
