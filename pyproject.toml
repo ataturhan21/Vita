@@ -3,7 +3,7 @@ name = "vita"
 version = "0.1.0"
 description = "Welcome to the Vita (β) Toolbox! This repository serves as a collection of various mini tools designed to simplify and enhance different tasks and processes"
 authors = ["fotino21 <ataturhan21@gmail.com>"]
-license = "GPL v3"
+license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
