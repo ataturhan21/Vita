@@ -45,7 +45,7 @@ The YouTube integration depends on the external site's behavior and the original
 
 ## License
 
-[GNU General Public License v3.0](LICENSE).
+[MIT](LICENSE).
 
 ## Image handling and offline checks
 
