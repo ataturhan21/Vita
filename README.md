@@ -54,5 +54,5 @@ adjustments, supports alpha-preserving inversion, and exports the edited PNG.
 Background removal uses a separate temporary PNG workspace for each call and
 cleans it on success or failure.
 
-Run `poetry run python -m unittest discover -s tests -v` for image regressions.
+Run `poetry run python -m unittest discover -s tests -v` for the image and YouTube-page regressions.
 The background-removal tests use a fake client and do not contact the service.
