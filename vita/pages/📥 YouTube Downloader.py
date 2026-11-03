@@ -1,8 +1,9 @@
 import os
 import re
+
 import streamlit as st
+from modules.utils import add_bg_from_local, local_css, set_page_config
 from pytube import YouTube
-from modules.utils import add_bg_from_local, set_page_config, local_css
 
 if "progress_bar" not in st.session_state:
     st.session_state.progress_bar = None
@@ -11,7 +12,9 @@ if "progress_bar" not in st.session_state:
 def show_percent_progress(stream, chunk, bytes_remaining):
     file_size = stream.filesize
     percent = (file_size - bytes_remaining) / file_size
-    st.session_state.progress_bar.progress(percent, text="YouTube video is downloaded")
+    st.session_state.progress_bar.progress(
+        percent, text="YouTube video is downloaded"
+    )
 
 
 def check_youtube_link(link: str):
@@ -19,7 +22,9 @@ def check_youtube_link(link: str):
 
 
 def download_video(link: str, path: str = "", choice: int = 2):
-    st.session_state.progress_bar = st.progress(0, text="YouTube video is downloaded")
+    st.session_state.progress_bar = st.progress(
+        0, text="YouTube video is downloaded"
+    )
     yt = YouTube(
         link,
         on_progress_callback=show_percent_progress,
@@ -36,7 +41,9 @@ def download_video(link: str, path: str = "", choice: int = 2):
         st.error("No downloadable stream was found for this video.")
         return
     path = stream.download(output_path=path)
-    st.session_state.progress_bar.progress(1.0, text="YouTube video downloaded")
+    st.session_state.progress_bar.progress(
+        1.0, text="YouTube video downloaded"
+    )
     st.balloons()
     st.write("Your video downloaded here: ", path)
 
@@ -46,7 +53,9 @@ def main():
 
     local_css()
 
-    background_img_path = os.path.join("static", "background", "Toolbox Logo.png")
+    background_img_path = os.path.join(
+        "static", "background", "Toolbox Logo.png"
+    )
     sidebar_background_img_path = os.path.join(
         "static", "background", "Lila Gradient.png"
     )

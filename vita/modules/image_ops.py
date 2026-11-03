@@ -7,7 +7,6 @@ from pathlib import Path
 
 from PIL import Image, ImageOps
 
-
 EDITABLE_MODES = {"RGB", "RGBA", "L", "LA", "CMYK"}
 
 
