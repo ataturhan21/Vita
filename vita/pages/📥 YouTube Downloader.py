@@ -15,7 +15,7 @@ def show_percent_progress(stream, chunk, bytes_remaining):
 
 
 def check_youtube_link(link: str):
-    return re.match("^https://www.youtube.com/(watch|shorts)", link)
+    return re.match(r"^https://(www\.|m\.)?youtube\.com/(watch|shorts)", link)
 
 
 def download_video(link: str, path: str = "", choice: int = 2):
@@ -31,6 +31,10 @@ def download_video(link: str, path: str = "", choice: int = 2):
         stream = yt.streams.filter(only_audio=True).first()
     elif choice == 2:
         stream = yt.streams.filter(file_extension="mp4").first()
+    if stream is None:
+        st.session_state.progress_bar.empty()
+        st.error("No downloadable stream was found for this video.")
+        return
     path = stream.download(output_path=path)
     st.session_state.progress_bar.progress(1.0, text="YouTube video downloaded")
     st.balloons()
