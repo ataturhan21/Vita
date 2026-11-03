@@ -1,7 +1,13 @@
 import os
 
 import streamlit as st
-from modules.image_ops import invert_image, png_bytes, remove_background
+from modules.image_ops import (
+    editable_image,
+    invert_image,
+    png_bytes,
+    remove_background,
+    removebg_api_key,
+)
 from modules.utils import add_bg_from_local, local_css, set_page_config
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 from PIL.ImageFilter import (
@@ -48,7 +54,7 @@ def main():
     if image is None:
         return
 
-    img = ImageOps.exif_transpose(Image.open(image))
+    img = editable_image(ImageOps.exif_transpose(Image.open(image)))
     edited_img = img
 
     with st.sidebar:
@@ -142,9 +148,17 @@ def main():
 
             st.sidebar.header("Background")
             if st.sidebar.checkbox("Remove background"):
-                edited_img = remove_background(
-                    edited_img, st.secrets["removebg_api_key"]
-                )
+                api_key = removebg_api_key(st.secrets)
+                if api_key is None:
+                    st.sidebar.error(
+                        "Add removebg_api_key to .streamlit/secrets.toml "
+                        "to remove backgrounds."
+                    )
+                else:
+                    try:
+                        edited_img = remove_background(edited_img, api_key)
+                    except Exception as error:
+                        st.sidebar.error(f"Background removal failed: {error}")
     if img is not None:
         col1, col2 = st.columns(2, gap="large")
         col1.subheader("Before")
