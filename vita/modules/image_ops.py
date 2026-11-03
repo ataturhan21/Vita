@@ -7,6 +7,29 @@ from pathlib import Path
 
 from PIL import Image, ImageOps
 
+EDITABLE_MODES = {"RGB", "RGBA", "L", "LA", "CMYK"}
+
+
+def editable_image(image):
+    """Convert modes that Pillow's enhancers reject (P, 1, I;16, ...)."""
+    if image.mode in EDITABLE_MODES:
+        return image
+    if image.mode in {"PA", "RGBa"} or "transparency" in image.info:
+        return image.convert("RGBA")
+    return image.convert("RGB")
+
+
+def removebg_api_key(secrets):
+    """Return the configured remove.bg key, or None when it is not set."""
+    # st.secrets shows its own error when no secrets file exists; check first.
+    load_if_toml_exists = getattr(secrets, "load_if_toml_exists", None)
+    if load_if_toml_exists is not None and not load_if_toml_exists():
+        return None
+    try:
+        return secrets["removebg_api_key"] or None
+    except (KeyError, FileNotFoundError):
+        return None
+
 
 def invert_image(image):
     """Invert visible color channels while preserving transparency."""

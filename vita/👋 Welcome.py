@@ -1,6 +1,7 @@
 import os
+
 import streamlit as st
-from modules.utils import add_bg_from_local, set_page_config, local_css
+from modules.utils import add_bg_from_local, local_css, set_page_config
 
 
 def main():
@@ -8,7 +9,9 @@ def main():
 
     local_css()
 
-    background_img_path = os.path.join("static", "background", "Toolbox Logo.png")
+    background_img_path = os.path.join(
+        "static", "background", "Toolbox Logo.png"
+    )
     sidebar_background_img_path = os.path.join(
         "static", "background", "Lila Gradient.png"
     )
