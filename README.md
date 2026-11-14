@@ -43,9 +43,9 @@ The existing `.gitignore` excludes `.streamlit/`; keep real credentials in that 
 
 The YouTube integration depends on the external site's behavior and the original pytube implementation. Check it with your intended URL before relying on a download workflow. The dependency set is preserved, and compatibility with current package releases has not been established.
 
-## License
+## Copyright
 
-[MIT](LICENSE).
+© Ata Turhan. All rights reserved. This repository has no open-source license: its code may not be copied, modified or redistributed.
 
 ## Image handling and offline checks
 
